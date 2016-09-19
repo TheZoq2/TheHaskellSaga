@@ -48,90 +48,6 @@ getRandomNrInRange randList (minVal, maxVal) =
 
 
 
-generateWeapon :: [Int] -> (Weapon, [Int])
-generateWeapon randList =
-	let
-		options = [
-				(
-					(1, 3),
-					[
-						("uncompiled", 				[0.5, 1.2, 0.5]),
-						("outdated", 				[1.3, 0.4, 1.3]),
-						("microsoft™", 				[0.4, 0.1, 0.3]),
-						("customized", 				[1.5, 0.7, 1.0]),
-						("russian", 				[0.6, 1.0, 0.8]),
-						("obfuscated", 				[0.2, 1.1, 1.0]),
-						("encrypted", 				[0.9, 2.0, 1.0]),
-						("standard", 				[1.0, 1.0, 1.0]),
-						("beta", 					[0.8, 0.8, 0.7]),
-						("alpha", 					[0.5, 0.5, 0.5]),
-						("pre alpha", 				[0.3, 0.3, 0.3]),
-						("deprecated", 				[1.2, 0.8, 1.1]),
-						("optimized", 				[1.1, 1.0, 1.0]),
-						("brand new", 				[0.7, 1.2, 1.3]),
-						("latest version of", 		[1.1, 1.2, 1.3]),
-						("limited edition", 		[1.0, 1.0, 1.0]),
-						("cloud connected", 		[0.8, 1.5, 1.3]),
-						("facebook integrated", 	[0.0, 0.0, 0.0]),
-						("buggy", 					[0.7, 0.5, 0.8]),
-						("javascript framework for",[0.0, 0.0, 0.0])
-					],
-					(*)
-				),
-				(
-					(1,1),
-					[
-						("vim", 				[3.00, 1.00, 3.00]),
-						("emacs", 				[0.50, 1.00, 2.00]),
-						("nano", 				[0.50, 1.00, 0.50]),
-						("notepad", 			[1.00, 1.00, 0.20]),
-						("gedit", 				[1.50, 1.00, 1.00]),
-						("sublime text", 		[1.80, 1.00, 1.10]),
-						("magnet", 				[0.05, 0.20, 1.00]),
-						("butterfly", 			[0.00, 0.00, 0.00]),
-						("car battery", 		[0.01, 0.02, 0.00]),
-						("wordpad", 			[1.00, 1.00, 0.00]),
-						("microsoft word", 		[1.20, 1.00, 0.10]),
-						("vi", 					[2.00, 1.00, 2.00]),
-						("neovim", 				[3.10, 1.00, 3.10]),
-						("screwdriver", 		[0.10, 1.00, 0.00]),
-						("cosmic rays", 		[0.00, 0.00, -1.0]),
-						("javascript framework",[1.50, 0.30, 1.70])
-					],
-					(+)
-				),
-				(
-					--[usability, security, usefullness]
-					(0,1),
-					[
-						("on gentoo", 					[0.70, 0.70, 3.00]),
-						("on windows™", 				[-2.0, -2.0, -2.0]),
-						("on mac™", 					[1.00, 1.30, 0.30]),
-						("on iOS™", 					[1.10, 1.30, 0.00]),
-						("on linux", 					[1.50, 1.50, 1.60]),
-						("on temple OS",				[0.50, 3.00, 0.30]),
-						("on ubuntu", 					[1.40, 0.90, 0.90]),
-						("on a raspberry pi", 			[0.70, 1.70, 0.70]),
-						("on arduino", 					[0.20, 3.00, 0.20]),
-						("on CD-ROM", 					[0.00, 0.00, 0.00]),
-						("on paper", 					[-100, 6.00, -100]),
-						("on floppy disk", 				[0.00, 2.00, 0.00]),
-						("on a javascript framework",	[1.50, 0.30, 1.60])
-					],
-					(+)
-				)
-			]
-
-		paramAmount = 3
-
-		(generatedName, (dmg1:dmg2:dmg3:_), newRandList) = generateGenericThing options paramAmount randList
-
-		damage = DamageType dmg1 dmg2 dmg3
-	in
-		(Weapon {weaponName = generatedName, weaponDamage = damage}, newRandList)
-
-
-
 generateGenericThing :: 
 		[
 			(
@@ -217,8 +133,89 @@ someFunc :: IO ()
 someFunc = do
 	r1 <- getStdGen
 	let randList  = randomRs (0, maxBound) r1 :: [Int]
-	putStrLn $ show $ fst $ generateWeapon randList
+	putStrLn $ show $ fst $ generateEditor randList
 
 
 
 
+generateEditor :: [Int] -> (Weapon, [Int])
+generateEditor randList =
+	let
+		options = [
+				(
+					(1, 3),
+					[
+						("uncompiled", 				[0.5, 1.2, 0.5]),
+						("outdated", 				[1.3, 0.4, 1.3]),
+						("microsoft™", 				[0.4, 0.1, 0.3]),
+						("customized", 				[1.5, 0.7, 1.0]),
+						("russian", 				[0.6, 1.0, 0.8]),
+						("obfuscated", 				[0.2, 1.1, 1.0]),
+						("encrypted", 				[0.9, 2.0, 1.0]),
+						("standard", 				[1.0, 1.0, 1.0]),
+						("beta", 					[0.8, 0.8, 0.7]),
+						("alpha", 					[0.5, 0.5, 0.5]),
+						("pre alpha", 				[0.3, 0.3, 0.3]),
+						("deprecated", 				[1.2, 0.8, 1.1]),
+						("optimized", 				[1.1, 1.0, 1.0]),
+						("brand new", 				[0.7, 1.2, 1.3]),
+						("latest version of", 		[1.1, 1.2, 1.3]),
+						("limited edition", 		[1.0, 1.0, 1.0]),
+						("cloud connected", 		[0.8, 1.5, 1.3]),
+						("facebook integrated", 	[0.0, 0.0, 0.0]),
+						("buggy", 					[0.7, 0.5, 0.8]),
+						("javascript framework for",[0.0, 0.0, 0.0])
+					],
+					(*)
+				),
+				(
+					(1,1),
+					[
+						("vim", 				[3.00, 1.00, 3.00]),
+						("emacs", 				[0.50, 1.00, 2.00]),
+						("nano", 				[0.50, 1.00, 0.50]),
+						("notepad", 			[1.00, 1.00, 0.20]),
+						("gedit", 				[1.50, 1.00, 1.00]),
+						("sublime text", 		[1.80, 1.00, 1.10]),
+						("magnet", 				[0.05, 0.20, 1.00]),
+						("butterfly", 			[0.00, 0.00, 0.00]),
+						("car battery", 		[0.01, 0.02, 0.00]),
+						("wordpad", 			[1.00, 1.00, 0.00]),
+						("microsoft word", 		[1.20, 1.00, 0.10]),
+						("vi", 					[2.00, 1.00, 2.00]),
+						("neovim", 				[3.10, 1.00, 3.10]),
+						("screwdriver", 		[0.10, 1.00, 0.00]),
+						("cosmic rays", 		[0.00, 0.00, -1.0]),
+						("javascript framework",[1.50, 0.30, 1.70])
+					],
+					(+)
+				),
+				(
+					--[usability, security, usefullness]
+					(0,1),
+					[
+						("on gentoo", 					[0.70, 0.70, 3.00]),
+						("on windows™", 				[-2.0, -2.0, -2.0]),
+						("on mac™", 					[1.00, 1.30, 0.30]),
+						("on iOS™", 					[1.10, 1.30, 0.00]),
+						("on linux", 					[1.50, 1.50, 1.60]),
+						("on temple OS",				[0.50, 3.00, 0.30]),
+						("on ubuntu", 					[1.40, 0.90, 0.90]),
+						("on a raspberry pi", 			[0.70, 1.70, 0.70]),
+						("on arduino", 					[0.20, 3.00, 0.20]),
+						("on CD-ROM", 					[0.00, 0.00, 0.00]),
+						("on paper", 					[-100, 6.00, -100]),
+						("on floppy disk", 				[0.00, 2.00, 0.00]),
+						("on a javascript framework",	[1.50, 0.30, 1.60])
+					],
+					(+)
+				)
+			]
+
+		paramAmount = 3
+
+		(generatedName, (dmg1:dmg2:dmg3:_), newRandList) = generateGenericThing options paramAmount randList
+
+		damage = DamageType dmg1 dmg2 dmg3
+	in
+		(Weapon {weaponName = generatedName, weaponDamage = damage}, newRandList)
