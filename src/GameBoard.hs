@@ -17,6 +17,8 @@ data CombatBoard = CombatBoard [[CombatPiece]]
 generateCombatBoard :: (Int, Int) -> CombatBoard
 generateCombatBoard (width, height) =
 	let
-		emptyBoard = CombatBoard $ take width $ (take height $ (Empty..))
+		emptyBoard = CombatBoard $ replicate width (replicate height Empty)
 	in
 		emptyBoard
+
+
