@@ -6,6 +6,23 @@ module Lib
 import System.Random
 import Data.List
 
+data DamageType = DamageType Float Float Float deriving(Show)
+
+
+data Weapon = Weapon {
+			weaponName :: String,
+			weaponDamage :: DamageType
+			} deriving(Show)
+
+data DefenceType = DefenceType Float Float Float deriving(Show)
+data MonsterAttackType = MonsterAttackType Float Float Float deriving(Show)
+
+data Monster = Monster
+			{
+				monsterName :: String,
+				monsterDefence :: DefenceType,
+				monsterAttack :: MonsterAttackType
+			}
 
 getNRandomElements :: [a] -> Int -> [Int] -> ([a], [Int])
 getNRandomElements vals n randList =
@@ -29,26 +46,9 @@ getRandomNrInRange randList (minVal, maxVal) =
 		((minVal + boundedNr), randList')
 
 
-	--generateWeapon :: [Int] -> (String, [Int])
-	--generateWeapon randList = 
-	--	let
-	--		modifiers = ["rusty", "broken", "decent", "godlike", "terrible", "mystic", "magic", "dank"]
-	--		materials = ["wood", "iron", "steel", "charcoal", "diamond", "bronze"]
-	--		types = ["hammer", "shortsword", "longsword", "zweihander", "axe", "spear", "broom", 
-	--				"halberd","stick", "knife", "dagger", "crossbow"]
-	--
-	--		(modifierAmount, randList') = getBoundedRandomNr randList 3
-	--		(selModifiers, randList'') = getNRandomElements modifiers modifierAmount randList'
-	--
-	--		(selMaterial, randList''') = getNRandomElements materials 1 randList''
-	--		(selType, randList'''') = getNRandomElements types 1 randList'''
-	--
-	--		name = concat $ map (\str -> str ++ " ") $ selModifiers ++ selMaterial ++ selType
-	--	in
-	--		(name, randList'''')
 
 
-generateWeapon :: [Int] -> (String, [Float], [Int])
+generateWeapon :: [Int] -> (Weapon, [Int])
 generateWeapon randList =
 	let
 		options = [
@@ -123,8 +123,12 @@ generateWeapon randList =
 			]
 
 		paramAmount = 3
+
+		(generatedName, (dmg1:dmg2:dmg3:_), newRandList) = generateGenericThing options paramAmount randList
+
+		damage = DamageType dmg1 dmg2 dmg3
 	in
-		generateGenericThing options paramAmount randList
+		(Weapon {weaponName = generatedName, weaponDamage = damage}, newRandList)
 
 
 
@@ -212,8 +216,8 @@ printMonster (name, params, _) =
 someFunc :: IO ()
 someFunc = do
 	r1 <- getStdGen
-	let randList  = randomRs (0, 100000) r1 :: [Int]
-	putStrLn $ show $ printMonster $ generateWeapon randList
+	let randList  = randomRs (0, maxBound) r1 :: [Int]
+	putStrLn $ show $ fst $ generateWeapon randList
 
 
 
