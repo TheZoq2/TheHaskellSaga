@@ -24,20 +24,33 @@ data Position = Position Int Int deriving(Show)
 
 
 data PieceType = Empty | PlayerPiece | PawnPiece | Wall deriving(Show)
+
 data CombatPiece = CombatPiece {
 		pieceType :: PieceType,
 		piecePosition :: Position,
 
-		pieceFuture :: [CombatPiece]
+		pieceFuture :: [CombatPiece],
 
-		pieceGetPossibleFuture :: (CombatPiece -> CombatBoard -> [Position])
-		pieceUpdateFunction:: (CombatPiece -> CombatBoard -> ([CombatPiece], [[CombatPiece]])
+		pieceGetPossibleFuture :: (CombatPiece -> CombatBoard -> [Position]),
+		pieceUpdateFunction:: (CombatPiece -> CombatBoard -> ([CombatPiece], [[CombatPiece]]))
 	}
 
 data CombatBoard = CombatBoard {
+		boardGrid :: [[PieceType]],
 		boardPieces :: [CombatPiece]
-		boardSize :: (Int, Int)
-	} deriving(Show)
+	}
+
+
+
+getBoardSize :: CombatBoard -> ((Int, Int), (Int, Int))
+getBoardSize (CombatBoard {boardPieces = []}) = 
+	((maxBound, maxBound), (minBound, minBound))
+getBoardSize (CombatBoard {boardPieces = _}) =
+	((0,0), (0,0))
+
+--generateBoardGrid :: CombatBoard -> [[PieceType]]
+--generateBoardGrid =
+--	
 
 
 
@@ -66,7 +79,7 @@ runOnNthHelper i n func (x:xs)
 --							Print functions
 ----------------------------------------------------------------------------------
 
-combatPieceToString :: CombatPiece -> Char
+pieceToString :: PieceType -> Char
 combatPieceToString piece =
 	case piece of
 		Empty -> '.'
@@ -74,7 +87,7 @@ combatPieceToString piece =
 		PawnPiece -> 'O'
 		Wall -> '#'
 
-combatBoardToString :: CombatBoard -> String
+boardToString :: CombatBoard -> String
 combatBoardToString board =
 	let
 		colToString col = map combatPieceToString col
