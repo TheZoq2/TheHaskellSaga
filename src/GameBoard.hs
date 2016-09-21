@@ -1,78 +1,52 @@
 module GameBoard
-    ( 
+	( 
 	generateEmptyCombatBoard,
 	combatBoardToString,
 	runTest
-    ) where
+	) where
+
+
+--Each turn starts out with a current board. 
+--1. Each piece on that board generates all possible spaces it could move to in the next
+--iteration. This can be run in parallel
+--2. Each piece then processes their turn. If the desired location it wants to move to
+--is not on the list of any other pieces possible movement locations then it moves itself
+--there. Otherwise it generates an ordered list of movement locations where the last 
+--element is guaranteed to be a non conflicted position or the piece is "destroyed"
+--3. All non-conflicting mores are folded into a single list
+--4. Each conflicting pieces plan is moved in order of "priority" until all pieces are 
+--   without conflict
 
 import Data.List
 
 
 data Position = Position Int Int deriving(Show)
 
-data Pawn = Pawn {
-		pawnPosition :: Position
-	} deriving(Show)
 
-data CombatPiece = Empty | PlayerPiece | PawnPiece | Wall deriving(Show)
+data PieceType = Empty | PlayerPiece | PawnPiece | Wall deriving(Show)
+data CombatPiece = CombatPiece {
+		pieceType :: PieceType,
+		piecePosition :: Position,
+
+		pieceFuture :: [CombatPiece]
+
+		pieceGetPossibleFuture :: (CombatPiece -> CombatBoard -> [Position])
+		pieceUpdateFunction:: (CombatPiece -> CombatBoard -> ([CombatPiece], [[CombatPiece]])
+	}
 
 data CombatBoard = CombatBoard {
-		combatBoardList :: [[CombatPiece]],
-		combatBoardSize :: (Int, Int)
+		boardPieces :: [CombatPiece]
+		boardSize :: (Int, Int)
 	} deriving(Show)
 
 
-generateEmptyCombatBoard :: (Int, Int) -> CombatBoard
-generateEmptyCombatBoard size@(width, height) =
-	let
-		emptyList = replicate width (replicate height Empty)
-	in
-		CombatBoard {combatBoardList = emptyList, combatBoardSize = size}
 
-
-
-
-populateCombatBoard :: CombatBoard -> [(CombatBoard -> CombatBoard)] -> CombatBoard
-populateCombatBoard original [] =
-	original
-populateCombatBoard original (func:nextFuncs) =
-	let
-		nextBoard = populateCombatBoard original nextFuncs
-	in
-		func nextBoard
-
-
-addWallsToBoard :: CombatBoard -> CombatBoard
-addWallsToBoard board =
-	let
-		size@(_, height) = combatBoardSize board
-		oldList = combatBoardList board
-
-		addWallsToSides originalRow = 
-			[Wall]
-			++
-			(init $ tail originalRow)
-			++
-			[Wall]
-
-		fullCol = replicate height Wall
-
-		newList = 
-			[fullCol]
-			++
-			(map addWallsToSides $ init $ tail $ oldList)
-			++
-			[fullCol]
-	in
-		CombatBoard {combatBoardList = newList, combatBoardSize = size}
-
-
-placePiece :: CombatPiece -> Position -> CombatBoard -> CombatBoard
-placePiece piece pos@(Position x y) board =
-	board { 
-		combatBoardList = 
-		runOnNth x (\lst -> runOnNth y (\_ -> piece) lst) $ combatBoardList board
-	}
+--placePiece :: CombatPiece -> Position -> CombatBoard -> CombatBoard
+--placePiece piece pos@(Position x y) board =
+--	board { 
+--		combatBoardList = 
+--		runOnNth x (\lst -> runOnNth y (\_ -> piece) lst) $ combatBoardList board
+--	}
 
 
 runOnNth :: Int -> (a -> a) -> [a] -> [a]

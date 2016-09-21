@@ -19,6 +19,7 @@ library
                      , GameBoard
   build-depends:       base >= 4.7 && < 5
                      , random
+                     , containers
   default-language:    Haskell2010
 
 executable adventure-exe
@@ -28,6 +29,7 @@ executable adventure-exe
   build-depends:       base
                      , adventure
                      , random
+                     , containers
   default-language:    Haskell2010
 
 test-suite adventure-test
